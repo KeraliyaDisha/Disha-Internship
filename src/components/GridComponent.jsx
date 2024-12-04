@@ -61,8 +61,6 @@ export default function MuiElevatorGrid() {
         }
     };
 
-    
-
     const moveLift = (liftIndex, floorIndex) => {
         const currentFloor = liftPositions[liftIndex];
         const travelTime = Math.abs(currentFloor - floorIndex) * 500;
@@ -119,87 +117,120 @@ export default function MuiElevatorGrid() {
                 <Typography variant="h4" align="center" gutterBottom>
                     Elevator Exercise
                 </Typography>
-                <Grid container spacing={1}>
-                    <Grid item xs={1.5}>
-                        {floors.map((floor) => (
-                            <Paper
-                                key={floor}
-                                elevation={1}
-                                sx={{
-                                    height: 60,
+                <Grid container spacing={0}>
+                    <Grid item xs={2} sx={{ borderRight: '2px solid #e0e0e0' }}>
+                        {floors.map((floor, floorIndex) => (
+                            <div
+                                key={`floor-${floor}`}
+                                style={{
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
-                                    border: '1px solid #e0e0e0',
-                                    mb: 1,
-                                    backgroundColor: '#f5f5f5',
+                                    height: 68,
+                                    borderBottom: floorIndex !== floors.length - 1 ? '1px solid #e0e0e0' : 'none',
                                 }}
                             >
-                                <Typography>{floor}</Typography>
-                            </Paper>
+                                <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+                                    {floor}
+                                </Typography>
+                            </div>
                         ))}
                     </Grid>
 
-                    {[...Array(5)].map((_, liftIndex) => (
-                        <Grid item xs={1.7} key={liftIndex}>
+                    {liftPositions.map((_, liftIndex) => (
+                        <Grid
+                            item
+                            xs={1.5}
+                            key={`lift-column-${liftIndex}`}
+                            sx={{
+                                position: 'relative',
+                                borderRight: liftIndex !== liftPositions.length - 1 ? '2px solid #e0e0e0' : 'none',
+                            }}
+                        >
                             <div
                                 style={{
                                     position: 'relative',
-                                    height: `${floors.length * 70}px`,
-                                    overflow: 'hidden',
+                                    height: `${floors.length * 68}px`,
+                                    borderLeft: '2px solid #e0e0e0',
                                 }}
                             >
                                 <div
                                     style={{
                                         position: 'absolute',
-                                        width: '100%',
-                                        height: '60px',
+                                        left: '5%',
+                                        top: '0.8%',
+                                        width: '90%',
+                                        height: 55,
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
                                         backgroundColor: liftArrived[liftIndex]
-                                            ? '#4caf50' 
+                                            ? '#4caf50'
                                             : movingLifts[liftIndex]
-                                                ? '#f44336' 
-                                                : '#757575', 
+                                                ? '#f44336'
+                                                : '#757575',
                                         color: '#fff',
                                         borderRadius: '4px',
-                                        transform: `translateY(${liftPositions[liftIndex] * 70}px)`,
+                                        transform: `translateY(${liftPositions[liftIndex] * 68}px)`,
                                         transition: `transform ${transitionDuration}s linear`,
+                                        boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
                                     }}
                                 >
                                     <People />
                                 </div>
                             </div>
+
+                            {/* Horizontal Lines */}
+                            {[...floors, 0].map((_, floorIndex) => (
+                                <div
+                                    key={`line-${liftIndex}-${floorIndex}`}
+                                    style={{
+                                        position: 'absolute',
+                                        top: floorIndex * 68,
+                                        width: '100%',
+                                        height: 1,
+                                        backgroundColor: '#e0e0e0',
+                                    }}
+                                />
+                            ))}
                         </Grid>
                     ))}
 
-                    <Grid item xs={1.5}>
+                    <Grid item xs={2}>
                         {floors.map((floor, index) => (
-                            <Button
-                                key={`call-${floor}`}
-                                variant="contained"
-                                color={
-                                    buttonsStatus[index] === 'Arrived'
-                                        ? 'success'
-                                        : buttonsStatus[index]
-                                            ? 'error'
-                                            : 'primary'
-                                }
-                                onClick={() => handleCallClick(floor)}
-                                fullWidth
-                                sx={{
-                                    height: 60,
-                                    mb: 1.2,
-                                    borderRadius: 1,
+                            <div
+                                key={`button-${floor}`}
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    height: 68,
+                                    borderBottom: index !== floors.length - 1 ? '1px solid #e0e0e0' : 'none',
                                 }}
                             >
-                                {buttonsStatus[index] === 'Arrived'
-                                    ? 'Arrived'
-                                    : buttonsStatus[index]
-                                        ? 'Waiting'
-                                        : 'Call'}
-                            </Button>
+                                <Button
+                                    variant="contained"
+                                    color={
+                                        buttonsStatus[index] === 'Arrived'
+                                            ? 'success'
+                                            : buttonsStatus[index]
+                                                ? 'error'
+                                                : 'primary'
+                                    }
+                                    onClick={() => handleCallClick(floor)}
+                                    fullWidth
+                                    sx={{
+                                        height: 60,
+                                        borderRadius: 1,
+                                    }}
+                                >
+                                    {buttonsStatus[index] === 'Arrived'
+                                        ? 'Arrived'
+                                        : buttonsStatus[index]
+                                            ? 'Waiting'
+                                            : 'Call'}
+                                </Button>
+                            </div>
                         ))}
                     </Grid>
                 </Grid>
@@ -207,5 +238,3 @@ export default function MuiElevatorGrid() {
         </ThemeProvider>
     );
 }
-
-
